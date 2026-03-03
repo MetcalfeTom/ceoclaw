@@ -4,21 +4,6 @@
 
 CEOClaw is an [OpenClaw](https://github.com/openclaw/openclaw) plugin extension that simulates a real startup. Four AI agents -- CEO, Developer, Marketing, and Sales -- each run as separate Telegram bots in a shared group chat. The CEO delegates, evaluates, and fires underperformers, rewriting their personas to hire replacements with different strategies.
 
-## The Demo
-
-Start CEOClaw before boarding a 13-hour flight to China. When you land, check the Telegram group and Stripe dashboard.
-
-What happened while you flew:
-1. The CEO picked a product idea and hired a team
-2. The Developer built a Next.js site with Stripe payments and deployed to Vercel
-3. Marketing posted launch announcements across Reddit, HN, Twitter, and niche forums
-4. Sales monitored conversions and suggested pricing tweaks
-5. The CEO evaluated performance, fired Marketing for low engagement, and hired a replacement with a different strategy
-6. The new Marketing agent tried a different approach
-7. Revenue appeared in Stripe
-
-All visible in real-time in a Telegram group chat.
-
 ## Architecture
 
 ```
