@@ -1,6 +1,13 @@
 import type { CEOClawState } from "../state/business-state.js";
 import { DEFAULT_SOULS } from "./default-souls.js";
 
+const TELEGRAM_BOT_USERNAMES: Record<string, string> = {
+  ceo: "@shell_corp_ceo_bot",
+  dev: "@shell_corp_dev_bot",
+  marketing: "@shell_corp_marketing_bot",
+  sales: "@shell_corp_sales_bot",
+};
+
 export function buildFounderContext(state: CEOClawState): string {
   const sections: string[] = [];
 
@@ -32,8 +39,9 @@ export function buildFounderContext(state: CEOClawState): string {
         m.wins + m.misses > 0
           ? ` (${((m.wins / (m.wins + m.misses)) * 100).toFixed(0)}% win rate)`
           : "";
+      const botHandle = TELEGRAM_BOT_USERNAMES[m.role] ?? TELEGRAM_BOT_USERNAMES[m.agentId] ?? "";
       sections.push(
-        `- **${m.name}** [${m.role}] — ${m.wins}W/${m.misses}L${winRate} — agent: ${m.agentId}`,
+        `- **${m.name}** [${m.role}] ${botHandle} — ${m.wins}W/${m.misses}L${winRate}`,
       );
     }
   }
@@ -52,6 +60,14 @@ export function buildFounderContext(state: CEOClawState): string {
         state.telegramGroupId +
         "`",
     );
+    sections.push("");
+    sections.push("### Telegram Bot Usernames (use THESE when tagging team members)");
+    sections.push("You may use nicknames in conversation, but when @mentioning someone, use their bot username:");
+    sections.push(`- CEO (you): ${TELEGRAM_BOT_USERNAMES.ceo}`);
+    sections.push(`- Dev: ${TELEGRAM_BOT_USERNAMES.dev}`);
+    sections.push(`- Marketing: ${TELEGRAM_BOT_USERNAMES.marketing}`);
+    sections.push(`- Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
+    sections.push("Example: \"@shell_corp_dev_bot Build the landing page\" — NOT \"@Jordan Build the landing page\"");
     sections.push("");
   }
 

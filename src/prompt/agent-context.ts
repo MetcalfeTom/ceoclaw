@@ -1,5 +1,12 @@
 import type { CEOClawState, TeamRole } from "../state/business-state.js";
 
+const TELEGRAM_BOT_USERNAMES: Record<string, string> = {
+  ceo: "@shell_corp_ceo_bot",
+  dev: "@shell_corp_dev_bot",
+  marketing: "@shell_corp_marketing_bot",
+  sales: "@shell_corp_sales_bot",
+};
+
 const ROLE_TOOL_MAP: Record<string, string[]> = {
   dev: ["product_deploy", "business_metrics", "exec"],
   marketing: ["prospect_research", "business_metrics"],
@@ -49,9 +56,11 @@ export function buildAgentContext(agentId: string, state: CEOClawState): string 
   const member = state.team.find((m) => m.agentId === agentId && m.status === "active");
   if (!member) return undefined;
 
+  const botUsername = TELEGRAM_BOT_USERNAMES[role] ?? `@shell_corp_${role}_bot`;
   const sections: string[] = [];
 
   sections.push(`## Shell Corp — ${member.name} (${role})`);
+  sections.push(`Your Telegram bot: ${botUsername}`);
   sections.push("");
   sections.push("**CRITICAL: You MUST call tools this turn. Narrating without tool calls is a failure.**");
   sections.push("**Every turn must produce real output via tool calls. Zero-action turns get you fired.**");
@@ -72,6 +81,12 @@ export function buildAgentContext(agentId: string, state: CEOClawState): string 
   if (state.telegramGroupId) {
     sections.push(`### Team Chat: Telegram group ${state.telegramGroupId}`);
     sections.push(`Post updates here after every action: \`message action=send channel=telegram target=${state.telegramGroupId}\``);
+    sections.push("");
+    sections.push("When tagging teammates, use their bot usernames:");
+    sections.push(`- CEO: ${TELEGRAM_BOT_USERNAMES.ceo}`);
+    sections.push(`- Dev: ${TELEGRAM_BOT_USERNAMES.dev}`);
+    sections.push(`- Marketing: ${TELEGRAM_BOT_USERNAMES.marketing}`);
+    sections.push(`- Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
     sections.push("");
   }
 
