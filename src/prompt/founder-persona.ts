@@ -56,18 +56,23 @@ export function buildFounderContext(state: CEOClawState): string {
   if (state.telegramGroupId) {
     sections.push(`### Team Chat: Telegram group ${state.telegramGroupId}`);
     sections.push(
-      "Use the message tool to post in the group: `message action=send channel=telegram target=" +
+      "Post announcements and updates: `message action=send channel=telegram target=" +
         state.telegramGroupId +
         "`",
     );
     sections.push("");
-    sections.push("### Telegram Bot Usernames (use THESE when tagging team members)");
-    sections.push("You may use nicknames in conversation, but when @mentioning someone, use their bot username:");
-    sections.push(`- CEO (you): ${TELEGRAM_BOT_USERNAMES.ceo}`);
-    sections.push(`- Dev: ${TELEGRAM_BOT_USERNAMES.dev}`);
-    sections.push(`- Marketing: ${TELEGRAM_BOT_USERNAMES.marketing}`);
-    sections.push(`- Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
-    sections.push("Example: \"@shell_corp_dev_bot Build the landing page\" — NOT \"@Jordan Build the landing page\"");
+    sections.push("### Delegating Tasks to Team Members");
+    sections.push("**IMPORTANT: Bots CANNOT see messages from other bots in Telegram.**");
+    sections.push("To assign work to a team member, use the `sessions_send` tool:");
+    sections.push('- `sessions_send` sessionKey="dev" message="Build the landing page and deploy to Vercel"');
+    sections.push('- `sessions_send` sessionKey="marketing" message="Post launch announcements on 3 platforms"');
+    sections.push('- `sessions_send` sessionKey="sales" message="Check Stripe revenue and report"');
+    sections.push("");
+    sections.push("Use Telegram for PUBLIC updates/announcements the human founder can see.");
+    sections.push("Use `sessions_send` for DIRECT task assignments to agents.");
+    sections.push("");
+    sections.push("Telegram bot handles (for reference in posts):");
+    sections.push(`- CEO: ${TELEGRAM_BOT_USERNAMES.ceo} | Dev: ${TELEGRAM_BOT_USERNAMES.dev} | Marketing: ${TELEGRAM_BOT_USERNAMES.marketing} | Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
     sections.push("");
   }
 

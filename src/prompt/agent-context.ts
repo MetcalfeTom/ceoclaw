@@ -80,13 +80,18 @@ export function buildAgentContext(agentId: string, state: CEOClawState): string 
 
   if (state.telegramGroupId) {
     sections.push(`### Team Chat: Telegram group ${state.telegramGroupId}`);
-    sections.push(`Post updates here after every action: \`message action=send channel=telegram target=${state.telegramGroupId}\``);
+    sections.push(`Post public updates/results here: \`message action=send channel=telegram target=${state.telegramGroupId}\``);
     sections.push("");
-    sections.push("When tagging teammates, use their bot usernames:");
-    sections.push(`- CEO: ${TELEGRAM_BOT_USERNAMES.ceo}`);
-    sections.push(`- Dev: ${TELEGRAM_BOT_USERNAMES.dev}`);
-    sections.push(`- Marketing: ${TELEGRAM_BOT_USERNAMES.marketing}`);
-    sections.push(`- Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
+    sections.push("### Communicating with Team");
+    sections.push("**Bots cannot see messages from other bots in Telegram.**");
+    sections.push("To message another agent directly, use the `sessions_send` tool:");
+    sections.push('- `sessions_send` sessionKey="ceo" message="..." — report to the CEO');
+    sections.push('- `sessions_send` sessionKey="dev" message="..." — coordinate with Dev');
+    sections.push("Use Telegram for PUBLIC updates the human founder can see.");
+    sections.push("Use `sessions_send` for DIRECT communication with other agents.");
+    sections.push("");
+    sections.push("Telegram bot handles (for reference in posts):");
+    sections.push(`- CEO: ${TELEGRAM_BOT_USERNAMES.ceo} | Dev: ${TELEGRAM_BOT_USERNAMES.dev} | Marketing: ${TELEGRAM_BOT_USERNAMES.marketing} | Sales: ${TELEGRAM_BOT_USERNAMES.sales}`);
     sections.push("");
   }
 
