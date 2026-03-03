@@ -6,9 +6,14 @@ export const BusinessMetricsSchema = Type.Object({
     Type.String({
       description:
         '"snapshot" (default) — pull all metrics and update state. ' +
-        '"history" — return recent metric snapshots from the action log.',
+        '"history" — return recent metric snapshots from the action log. ' +
+        '"set_idea" — record the chosen product idea in persistent state (requires productName + productDescription). ' +
+        '"set_stage" — advance the business stage (requires stage: "ideation"|"build"|"launch"|"growth").',
     }),
   ),
+  productName: Type.Optional(Type.String({ description: "Product name (for set_idea)" })),
+  productDescription: Type.Optional(Type.String({ description: "One-line product description (for set_idea)" })),
+  stage: Type.Optional(Type.String({ description: 'Target stage for set_stage: "ideation", "build", "launch", "growth"' })),
 });
 
 export function createBusinessMetricsTool(params: {
@@ -36,6 +41,44 @@ export function createBusinessMetricsTool(params: {
           .filter((a) => a.action.startsWith("metrics:"))
           .slice(-20);
         return jsonResult({ history: metricActions });
+      }
+
+      if (action === "set_idea") {
+        const name = String(p.productName ?? "");
+        const description = String(p.productDescription ?? "");
+        if (!name || !description) {
+          return jsonResult({ error: "productName and productDescription are required for set_idea" });
+        }
+        state.product = {
+          ...state.product,
+          name,
+          description,
+        };
+        if (state.stage === "ideation") {
+          state.stage = "build";
+        }
+        params.writeState(state);
+        return jsonResult({
+          action: "set_idea",
+          product: state.product,
+          stage: state.stage,
+          message: `Product idea "${name}" recorded. Stage advanced to ${state.stage.toUpperCase()}. Now scaffold and build it.`,
+        });
+      }
+
+      if (action === "set_stage") {
+        const target = String(p.stage ?? "");
+        const validStages = ["ideation", "build", "launch", "growth"];
+        if (!validStages.includes(target)) {
+          return jsonResult({ error: `stage must be one of: ${validStages.join(", ")}` });
+        }
+        state.stage = target as typeof state.stage;
+        params.writeState(state);
+        return jsonResult({
+          action: "set_stage",
+          stage: state.stage,
+          message: `Stage set to ${state.stage.toUpperCase()}.`,
+        });
       }
 
       // snapshot: aggregate from all sources

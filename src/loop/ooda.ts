@@ -50,8 +50,15 @@ export function buildOodaPrompt(state: CEOClawState): string {
       if (vacantRoles.length > 0) {
         sections.push("**PRIORITY: Hire all vacant roles.** Call `team_manage` with action='hire' for each.");
         sections.push("For each hire, provide: role, name, and a detailed persona string (10+ lines).");
+      } else if (state.product?.name) {
+        sections.push(`**Product already chosen: "${state.product.name}". DO NOT pick a new idea.**`);
+        sections.push("Call `business_metrics` action=\"set_stage\" stage=\"build\" to advance NOW.");
+        sections.push("Then call `product_deploy` action=\"scaffold\" and assign @shell_corp_dev_bot in Telegram.");
       } else {
-        sections.push("All roles filled. Pick a product idea, post in Telegram, assign Dev to build.");
+        sections.push("All roles filled. Pick ONE product idea and LOCK IT:");
+        sections.push("Call `business_metrics` action=\"set_idea\" productName=\"...\" productDescription=\"...\"");
+        sections.push("Then call `product_deploy` action=\"scaffold\" to create the project.");
+        sections.push("Post in Telegram to assign @shell_corp_dev_bot.");
       }
       break;
 

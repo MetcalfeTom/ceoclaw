@@ -138,13 +138,21 @@ export function buildFounderContext(state: CEOClawState): string {
   switch (state.stage) {
     case "ideation":
       sections.push("### Stage: IDEATION — What to do NOW");
-      if (vacantRoles.includes("dev")) {
+      if (state.product?.name) {
+        sections.push(`**⚠️ Product already chosen: "${state.product.name}" — ${state.product.description}**`);
+        sections.push("**DO NOT pick a new idea. The idea is locked in. Advance to BUILD.**");
+        sections.push("1. Call `business_metrics` action=\"set_stage\" stage=\"build\" to advance to BUILD");
+        sections.push("2. Call `product_deploy` action=\"scaffold\" to create the project");
+        sections.push("3. Post in Telegram: announce build is starting, assign @shell_corp_dev_bot");
+      } else if (vacantRoles.includes("dev")) {
         sections.push("1. **FIRST**: Call `team_manage` to hire dev (see above)");
-        sections.push("2. **THEN**: Pick a product idea and post it in the Telegram group");
+        sections.push("2. **THEN**: Pick a product idea and LOCK IT IN (see step below)");
       } else {
-        sections.push("1. Pick a concrete product idea (AI micro-SaaS, paid API, tool)");
-        sections.push("2. Post the idea in the Telegram group and assign Dev to build it");
-        sections.push("3. Hire Marketing and Sales if not yet hired");
+        sections.push("1. Pick ONE concrete product idea (AI micro-SaaS, paid API, tool)");
+        sections.push("2. **LOCK IT IN**: Call `business_metrics` action=\"set_idea\" productName=\"...\" productDescription=\"...\"");
+        sections.push("   This records the idea in persistent state so you don't forget it next cycle.");
+        sections.push("3. Call `product_deploy` action=\"scaffold\" to create the project skeleton");
+        sections.push("4. Post in Telegram: announce the product and assign @shell_corp_dev_bot to build it");
       }
       break;
 
