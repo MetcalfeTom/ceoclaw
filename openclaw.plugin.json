@@ -1,0 +1,44 @@
+{
+  "id": "ceoclaw",
+  "name": "CEOClaw",
+  "description": "AI startup with a CEO agent that manages a team of specialist agents via Telegram",
+  "skills": ["./skills"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "stripeSecretKey": {
+        "type": "string",
+        "description": "Stripe secret key (sk_live_... or sk_test_...)"
+      },
+      "stripePublishableKey": {
+        "type": "string",
+        "description": "Stripe publishable key (pk_live_... or pk_test_...)"
+      },
+      "vercelToken": {
+        "type": "string",
+        "description": "Vercel API token for deployments"
+      },
+      "githubToken": {
+        "type": "string",
+        "description": "GitHub personal access token (repo creation scope)"
+      },
+      "telegramGroupId": {
+        "type": "string",
+        "description": "Telegram group chat ID where the team communicates"
+      },
+      "openclawStateDir": {
+        "type": "string",
+        "description": "OpenClaw state directory (default: ~/.openclaw). Used to write agent SOUL.md files."
+      },
+      "projectsDir": {
+        "type": "string",
+        "description": "Base directory for product projects (default: ~/.openclaw/ceoclaw/projects)"
+      },
+      "loopIntervalMinutes": {
+        "type": "number",
+        "description": "CEO OODA loop cron interval in minutes (default: 30)"
+      }
+    },
+    "additionalProperties": false
+  }
+}
