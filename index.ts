@@ -8,6 +8,7 @@ import { createBusinessMetricsTool } from "./src/tools/business-metrics.js";
 import { createProspectResearchTool } from "./src/tools/prospect-research.js";
 import { createTeamManageTool } from "./src/tools/team-manage.js";
 import { buildFounderContext } from "./src/prompt/founder-persona.js";
+import { buildAgentContext } from "./src/prompt/agent-context.js";
 import { createDashboardHandler } from "./src/dashboard/handler.js";
 import { registerCeoCommands } from "./src/cli/commands.js";
 
@@ -106,11 +107,19 @@ const plugin = {
       { name: "team_manage", optional: true },
     );
 
-    // --- System Prompt: CEO Persona ---
+    // --- System Prompt: Agent Context ---
 
-    api.on("before_prompt_build", () => {
+    api.on("before_prompt_build", (_event, ctx) => {
       const state = getState();
-      return { prependContext: buildFounderContext(state) };
+
+      if (ctx.agentId === "ceo") {
+        return { prependContext: buildFounderContext(state) };
+      }
+
+      const agentCtx = buildAgentContext(ctx.agentId, state);
+      if (agentCtx) {
+        return { prependContext: agentCtx };
+      }
     });
 
     // --- HTTP Dashboard ---
